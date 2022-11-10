@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -42,6 +42,44 @@ app.post('/products', async (req, res) => {
                 error: `could not add the product`
             })
         }
+    } catch (err) {
+        res.send({
+            success: false,
+            error: err.message,
+        })
+    }
+});
+app.get('/products', async (req, res) => {
+    try {
+        const cursor = productCollection.find({});
+        const products = await cursor.toArray();
+        res.send(products)
+    } catch (err) {
+        res.send({
+            success: false,
+            error: err.message,
+        })
+    }
+})
+app.get('/services/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const cursor = productCollection.find(query);
+        const products = await cursor.toArray();
+        res.send(products)
+    } catch (err) {
+        res.send({
+            success: false,
+            error: err.message,
+        })
+    }
+})
+app.get('/limit', async (req, res) => {
+    try {
+        const cursor = productCollection.find({}).limit(3);
+        const products = await cursor.toArray();
+        res.send(products)
     } catch (err) {
         res.send({
             success: false,
