@@ -25,8 +25,10 @@ async function run() {
 run();
 
 
+
 const productCollection = client.db('tutor11').collection('products');
 const reviewCollection = client.db('tutor11').collection('reviews');
+//for all services
 app.post('/products', async (req, res) => {
     try {
         const result = await productCollection.insertOne(req.body);
@@ -87,5 +89,50 @@ app.get('/limit', async (req, res) => {
         })
     }
 })
+
+//end all service getting part
+
+
+//start review part.....
+
+app.post('/review', async (req, res) => {
+    try {
+        const result = await reviewCollection.insertOne(req.body);
+        if (result.insertedId) {
+            res.send({
+                success: true,
+                message: `successfully added ${req.body.name}`
+            })
+        }
+        else {
+            res.send({
+                success: false,
+                error: `could not add the review`
+            })
+        }
+    } catch (err) {
+        res.send({
+            success: false,
+            error: err.message,
+        })
+    }
+});
+
+
+app.get('/myReview', async (req, res) => {
+    let query = {};
+    if (req.query.email) {
+        query = {
+            email: req.query.email
+        }
+    }
+    const cursor = reviewCollection.find(query);
+    const reviews = await cursor.toArray();
+    res.send(reviews)
+})
+
+
+
+
 
 app.listen(port, () => console.log('server running on now', port))
