@@ -129,6 +129,39 @@ app.get('/myReview', async (req, res) => {
     const cursor = reviewCollection.find(query);
     const reviews = await cursor.toArray();
     res.send(reviews)
+});
+app.get('/productReview', async (req, res) => {
+    let query = {};
+    if (req.query.productName) {
+        query = {
+            productName: req.query.productName
+        }
+    }
+    const cursor = reviewCollection.find(query);
+    const reviewss = await cursor.toArray();
+    res.send(reviewss)
+});
+
+
+
+
+app.delete('/myReview/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await reviewCollection.deleteOne({ _id: ObjectId(id) });
+        if (result.deletedCount) {
+            res.send({
+                success: true,
+                message: 'successfully delete'
+            })
+
+        } else {
+
+        }
+    }
+    catch (error) {
+        console.log(error)
+    }
 })
 
 
