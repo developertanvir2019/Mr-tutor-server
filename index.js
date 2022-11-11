@@ -10,7 +10,6 @@ app.use(express.json());
 
 
 const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.czo9kw9.mongodb.net/?retryWrites=true&w=majority`;
-console.log(url)
 const client = new MongoClient(url);
 
 async function run() {
@@ -130,8 +129,6 @@ async function run() {
             const reviewss = await cursor.toArray();
             res.send(reviewss)
         });
-
-
 
 
         app.delete('/myReview/:id', async (req, res) => {
